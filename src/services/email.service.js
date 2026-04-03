@@ -21,7 +21,7 @@ transporter.verify((error, success) => {
     }
 });
 
-// Function to send email
+// Functions to send email
 const sendEmail = async (to, subject, text, html) => {
     try {
         const info = await transporter.sendMail({
@@ -41,12 +41,30 @@ const sendEmail = async (to, subject, text, html) => {
 
 async function sendRegistrationEmail(userEmail, name) {
     const subject = 'Welcome to Bransact!';
-    const text = `Hello ${name},\n\nThank you for registering at Bransact. We're excited to have you on board!\n\nBest regards,\nThe Bransact Team`;
-    const html = `<p>Hello ${name},</p><p>Thank you for registering at Bransact. We're excited to have you on board!</p><p>Best regards,<br>The Bransact Team</p>`;
+    const text = `Hello ${name},\n\nThank you for registering at Bransact. We're excited to have you on board!\n\nBest regards,\nTeam Bransact`;
+    const html = `<p>Hello ${name},</p><p>Thank you for registering at Bransact. We're excited to have you on board!</p><p>Best regards,<br>Team Bransact</p>`;
+
+    await sendEmail(userEmail, subject, text, html);
+}
+
+async function sendTransactionEmail(userEmail, name, amount, toAccount) {
+    const subject = 'Transaction Successful!';
+    const text = `Hello ${name},\n\nYour transaction of $${amount} to account ${toAccount} was successful.\n\nBest regards,\nTeam Bransact`;
+    const html = `<p>Hello ${name},</p><p>Your transaction of $${amount} to account ${toAccount} was successful.</p><p>Best regards,<br>Team Bransact</p>`;
+
+    await sendEmail(userEmail, subject, text, html);
+}
+
+async function sendTransactionFailureEmail(userEmail, name, amount, toAccount) {
+    const subject = 'Transaction Failed';
+    const text = `Hello ${name},\n\nWe regret to inform you that your transaction of $${amount} to account ${toAccount} has failed. Please try again later.\n\nBest regards,\nTeam Bransact`;
+    const html = `<p>Hello ${name},</p><p>We regret to inform you that your transaction of $${amount} to account ${toAccount} has failed. Please try again later.</p><p>Best regards,<br>Team Bransact</p>`;
 
     await sendEmail(userEmail, subject, text, html);
 }
 
 module.exports = {
-    sendRegistrationEmail
+    sendRegistrationEmail,
+    sendTransactionEmail,
+    sendTransactionFailureEmail
 };
