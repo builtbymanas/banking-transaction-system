@@ -30,12 +30,13 @@ const userRegisterController = async (req, res) => {
     res.cookie("token", token)
 
     res.status(201).json({
+        message: "User registered successfully",
         user: {
             _id: user._id,
             email: user.email,
             name: user.name
         },
-        token
+        token: token
     })
 
     await emailService.sendRegistrationEmail(user.email, user.name)
@@ -69,12 +70,13 @@ const userLoginController = async (req, res) => {
     res.cookie("token", token)
 
     res.status(200).json({
+        message: "User logged in successfully",
         user: {
             _id: user._id,
             email: user.email,
             name: user.name
         },
-        token
+        token: token
     })
 
 }
