@@ -120,7 +120,7 @@ const createTransaction = async (req, res) => {
         const session = await mongoose.startSession()
         session.startTransaction()
 
-        const transaction = (await transactionModel.create([{
+        transaction = (await transactionModel.create([{
             fromAccount,
             toAccount,
             amount,
@@ -138,9 +138,10 @@ const createTransaction = async (req, res) => {
             type: "DEBIT"
         }], { session })
 
-        await (() => {
-            return new Promise((resolve) => setTimeout(resolve, 15 * 1000))
-        })()
+        //setTimeout to simulate delay in transaction processing and test idempotency
+        //await (() => {
+        //    return new Promise((resolve) => setTimeout(resolve, 15 * 1000))
+        //})()
 
         /**
          * 7. Create CREDIT ledger entry
@@ -160,6 +161,9 @@ const createTransaction = async (req, res) => {
             { status: "COMPLETED" },
             { session }
         )
+
+        //fix: update local object
+        transaction.status = "COMPLETED";
 
         /**
          * 9. Commit MongoDB session
