@@ -33,7 +33,14 @@ const createTransaction = async (req, res) => {
 
     const fromUserAccount = await accountModel.findOne({
         _id: fromAccount,
+        user: req.user._id
     })
+
+    if (!fromUserAccount) {
+        return res.status(403).json({
+            message: "Unauthorized: You do not own this account"
+        })
+    }
 
     const toUserAccount = await accountModel.findOne({
         _id: toAccount,
@@ -42,6 +49,12 @@ const createTransaction = async (req, res) => {
     if (!fromUserAccount || !toUserAccount) {
         return res.status(400).json({
             message: "Invalid fromAccount or toAccount"
+        })
+    }
+
+    if (fromAccount === toAccount) {
+        return res.status(400).json({
+            message: "Cannot transfer to same account"
         })
     }
 
